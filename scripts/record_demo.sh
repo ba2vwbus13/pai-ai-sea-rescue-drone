@@ -23,4 +23,5 @@ done
 sleep 4
 kill -INT $REC; wait $REC 2>/dev/null
 echo "録画終了: $RAW"
+pkill -9 -f "[i]mage_bridge"      # 終了時のクラッシュ報告を避ける
 kill -INT $AI 2>/dev/null
