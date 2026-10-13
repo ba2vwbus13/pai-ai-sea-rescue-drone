@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 自動生成: worlds/make_world.py。直接編集しないこと -->
+<sdf version="1.9">
+  <world name="sea_sar">
+    <physics type="ode">
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>250</real_time_update_rate>
+    </physics>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type="adiabatic"/>
+    <scene>
+      <sky><clouds><speed>6</speed></clouds></sky>
+      <grid>false</grid>
+      <ambient>0.55 0.55 0.55 1.0</ambient>
+      <background>0.6 0.7 0.9 1.0</background>
+      <shadows>true</shadows>
+    </scene>
+    <light name="sun" type="directional">
+      <pose>0 0 500 0 0 0</pose>
+      <cast_shadows>true</cast_shadows>
+      <intensity>1</intensity>
+      <direction>0.3 0.4 -0.85</direction>
+      <diffuse>0.9 0.9 0.9 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+    </light>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>26.5472</latitude_deg>
+      <longitude_deg>128.054</longitude_deg>
+      <elevation>0</elevation>
+    </spherical_coordinates>
+    <!-- 当たり判定用の平面(海面・砂浜とも z=0)。見た目は下の海面モデルと砂浜 -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>1 1</size></plane></geometry>
+          <surface><friction><ode><mu>0.6</mu><mu2>0.6</mu2></ode></friction></surface>
+        </collision>
+      </link>
+    </model>
+    <!-- 海面(Fuel の Coast Water: 6 km 四方、波模様のシェーダー) -->
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Coast%20Water</uri><name>sea_surface</name>
+      <pose>0 0 0 0 0 0</pose><static>true</static></include>
+    <!-- 砂浜(北側)。南端 y=-3 付近が汀線 -->
+    <model name="beach"><static>true</static><pose>0 37 0.05 0 0 0</pose>
+      <link name="link"><visual name="sand"><cast_shadows>false</cast_shadows>
+        <geometry><box><size>400 80 0.1</size></box></geometry>
+        <material><diffuse>0.86 0.79 0.62 1</diffuse><specular>0 0 0 1</specular></material>
+      </visual></link></model>
+    <model name="helipad"><static>true</static><pose>0 0 0.11 0 0 0</pose>
+      <link name="link">
+        <visual name="pad"><geometry><box><size>5 5 0.02</size></box></geometry>
+          <material><diffuse>0.25 0.25 0.25 1</diffuse></material></visual>
+        <visual name="h1"><pose>-1 0 0.012 0 0 0</pose><geometry><box><size>0.4 2.6 0.01</size></box></geometry>
+          <material><diffuse>0.95 0.95 0.95 1</diffuse></material></visual>
+        <visual name="h2"><pose>1 0 0.012 0 0 0</pose><geometry><box><size>0.4 2.6 0.01</size></box></geometry>
+          <material><diffuse>0.95 0.95 0.95 1</diffuse></material></visual>
+        <visual name="h3"><pose>0 0 0.012 0 0 0</pose><geometry><box><size>2.0 0.4 0.01</size></box></geometry>
+          <material><diffuse>0.95 0.95 0.95 1</diffuse></material></visual>
+      </link></model>
+    <model name="person_P1"><pose>-43.94 -151.00 -0.12 0.0 0 0.5</pose>
+      <link name="link">
+        <gravity>false</gravity>
+        <inertial><mass>70</mass><inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz></inertia></inertial>
+        <visual name="v0">
+                <geometry>
+                    <mesh>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/meshes/rescue_randy.dae</uri>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/textures/rescue_randy_albedo.png</albedo_map>
+                            <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/textures/rescue_randy_normal.png</normal_map>
+                            <metalness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/textures/rescue_randy_metalness.png</metalness_map>
+                            <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/textures/rescue_randy_roughness.png</roughness_map>
+                        </metal>
+                    </pbr>
+                    
+                    <script>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/scripts</uri>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/textures</uri>
+                        <name>RescueRandy/Diffuse</name>
+                    </script>
+                </material>
+                <plugin filename="ignition-gazebo-thermal-system" name="ignition::gazebo::systems::Thermal">
+                    <heat_signature>materials/textures/RescueRandy_Thermal.png</heat_signature>
+                    <max_temp>310</max_temp>
+                </plugin>
+            </visual>
+      </link>
+      <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl">
+        <initial_linear>-0.1500 -0.0035 0.0000</initial_linear>
+      </plugin>
+    </model>
+    <model name="person_P2"><pose>-29.94 -165.00 -1.00 0.0 0 1.0</pose>
+      <link name="link">
+        <gravity>false</gravity>
+        <inertial><mass>70</mass><inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz></inertia></inertial>
+        <visual name="v0">
+                <pose>0 0 0.02 0.04 0 0</pose>
+                <geometry>
+                    <mesh>
+                        <uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Casual%20female/4/files/meshes/casual_female.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+      </link>
+      <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl">
+        <initial_linear>-0.1333 0.0688 -0.0000</initial_linear>
+      </plugin>
+    </model>
+    <model name="person_P3"><pose>-23.94 -143.00 -1.10 0.0 0 -0.6</pose>
+      <link name="link">
+        <gravity>false</gravity>
+        <inertial><mass>70</mass><inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz></inertia></inertial>
+        <visual name="v0">
+                <pose>0 0 0.02 0.04 0 0</pose>
+                <geometry>
+                    <mesh>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/standing%20person/3/files/meshes/standing.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+      </link>
+      <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl">
+        <initial_linear>-0.0649 -0.1352 0.0000</initial_linear>
+      </plugin>
+    </model>
+    <model name="person_P4"><pose>-67.94 -200.00 -1.20 0.0 0 2.2</pose>
+      <link name="link">
+        <gravity>false</gravity>
+        <inertial><mass>70</mass><inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz></inertia></inertial>
+        <visual name="v0">
+                <pose>0 0 -0.02 0 0 0</pose>
+                <geometry>
+                    <mesh>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/walking%20person/3/files/meshes/walking.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
+      </link>
+      <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl">
+        <initial_linear>0.0158 0.1492 -0.0000</initial_linear>
+      </plugin>
+    </model>
+    <model name="person_P5"><pose>-92.94 -115.00 -0.12 0.0 0 2.6</pose>
+      <link name="link">
+        <gravity>false</gravity>
+        <inertial><mass>70</mass><inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz></inertia></inertial>
+        <visual name="v0">
+                <geometry>
+                    <mesh>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/meshes/rescue_randy.dae</uri>
+                    </mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/textures/rescue_randy_albedo.png</albedo_map>
+                            <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/textures/rescue_randy_normal.png</normal_map>
+                            <metalness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/textures/rescue_randy_metalness.png</metalness_map>
+                            <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/textures/rescue_randy_roughness.png</roughness_map>
+                        </metal>
+                    </pbr>
+                    
+                    <script>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/scripts</uri>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/rescue%20randy/3/files/materials/textures</uri>
+                        <name>RescueRandy/Diffuse</name>
+                    </script>
+                </material>
+                <plugin filename="ignition-gazebo-thermal-system" name="ignition::gazebo::systems::Thermal">
+                    <heat_signature>materials/textures/RescueRandy_Thermal.png</heat_signature>
+                    <max_temp>310</max_temp>
+                </plugin>
+            </visual>
+      </link>
+      <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl">
+        <initial_linear>0.0727 0.1312 -0.0000</initial_linear>
+      </plugin>
+    </model>
+    <model name="capsized_boat"><pose>-35.94 -155.00 0.25 3.141592653589793 0 0.8</pose>
+      <link name="link">
+        <gravity>false</gravity>
+        <inertial><mass>70</mass><inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz></inertia></inertial>
+        <visual name="v0">
+                <geometry>
+                    <mesh>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/meshes/rcboat.dae</uri>
+                        <submesh>
+                            <name>Propeller</name>
+                            <center>false</center>
+                        </submesh>
+                    <scale>4.0 4.0 4.0</scale></mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Albedo.png</albedo_map>
+                            <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Normal.png</normal_map>
+                            <metalness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Metalness.png</metalness_map>
+                            <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Roughness.png</roughness_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual><visual name="v1">
+                <geometry>
+                    <mesh>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/meshes/rcboat.dae</uri>
+                        <submesh>
+                            <name>Thruster</name>
+                            <center>false</center>
+                        </submesh>
+                    <scale>4.0 4.0 4.0</scale></mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Albedo.png</albedo_map>
+                            <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Normal.png</normal_map>
+                            <metalness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Metalness.png</metalness_map>
+                            <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Roughness.png</roughness_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual><visual name="v2">
+                <geometry>
+                    <mesh>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/meshes/rcboat.dae</uri>
+                        <submesh>
+                            <name>Rudder</name>
+                            <center>false</center>
+                        </submesh>
+                    <scale>4.0 4.0 4.0</scale></mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Albedo.png</albedo_map>
+                            <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Normal.png</normal_map>
+                            <metalness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Metalness.png</metalness_map>
+                            <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Roughness.png</roughness_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual><visual name="v3">
+                <geometry>
+                    <mesh>
+                        <uri>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/meshes/rcboat.dae</uri>
+                        <submesh>
+                            <name>Boat</name>
+                            <center>false</center>
+                        </submesh>
+                    <scale>4.0 4.0 4.0</scale></mesh>
+                </geometry>
+                <material>
+                    <diffuse>1.0 1.0 1.0</diffuse>
+                    <specular>1.0 1.0 1.0</specular>
+                    <pbr>
+                        <metal>
+                            <albedo_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Albedo.png</albedo_map>
+                            <normal_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Normal.png</normal_map>
+                            <metalness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Metalness.png</metalness_map>
+                            <roughness_map>https://fuel.gazebosim.org/1.0/openrobotics/models/rc%20boat/4/files/materials/textures/Boat_Roughness.png</roughness_map>
+                        </metal>
+                    </pbr>
+                </material>
+            </visual>
+      </link>
+      <plugin filename="gz-sim-velocity-control-system" name="gz::sim::systems::VelocityControl">
+        <initial_linear>-0.1443 -0.0409 -0.0000</initial_linear>
+      </plugin>
+    </model>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Pier</uri><name>static_0</name>
+      <pose>70.0 -10.0 0.0 0 0 0.0</pose><static>true</static></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/Vessel%20C</uri><name>static_1</name>
+      <pose>62.0 -30.0 0.0 0 0 1.4</pose><static>true</static></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/mb_round_buoy_orange</uri><name>static_2</name>
+      <pose>0.0 -60.0 0.0 0 0 0.0</pose><static>true</static></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/mb_round_buoy_orange</uri><name>static_3</name>
+      <pose>70.0 -150.0 0.0 0 0 0.0</pose><static>true</static></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/mb_marker_buoy_red</uri><name>static_4</name>
+      <pose>-30.0 -120.0 0.0 0 0 0.0</pose><static>true</static></include>
+    <include><uri>https://fuel.gazebosim.org/1.0/OpenRobotics/models/mb_marker_buoy_red</uri><name>static_5</name>
+      <pose>90.0 -95.0 0.0 0 0 0.0</pose><static>true</static></include>
+    <model name="debris_0"><static>true</static><pose>25.0 -95.0 0.05 0 1.5708 0.4</pose>
+      <link name="link"><visual name="v"><geometry><cylinder><radius>0.18</radius><length>3.0</length></cylinder></geometry>
+        <material><diffuse>0.45 0.33 0.2 1</diffuse><specular>0 0 0 1</specular></material></visual></link></model>
+    <model name="debris_1"><static>true</static><pose>-10.0 -150.0 0.05 0 1.5708 1.2</pose>
+      <link name="link"><visual name="v"><geometry><cylinder><radius>0.18</radius><length>2.0</length></cylinder></geometry>
+        <material><diffuse>0.45 0.33 0.2 1</diffuse><specular>0 0 0 1</specular></material></visual></link></model>
+    <model name="debris_2"><static>true</static><pose>60.0 -140.0 0.05 0 1.5708 2.0</pose>
+      <link name="link"><visual name="v"><geometry><cylinder><radius>0.18</radius><length>4.0</length></cylinder></geometry>
+        <material><diffuse>0.45 0.33 0.2 1</diffuse><specular>0 0 0 1</specular></material></visual></link></model>
+    <model name="debris_3"><static>true</static><pose>5.0 -125.0 0.05 0 1.5708 0.9</pose>
+      <link name="link"><visual name="v"><geometry><cylinder><radius>0.18</radius><length>1.5</length></cylinder></geometry>
+        <material><diffuse>0.45 0.33 0.2 1</diffuse><specular>0 0 0 1</specular></material></visual></link></model>
+  </world>
+</sdf>

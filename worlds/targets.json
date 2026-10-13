@@ -1,0 +1,54 @@
+{
+  "world": "sea_sar",
+  "home_lat": 26.5472,
+  "home_lon": 128.054,
+  "frame": "NED(north=y, east=x) [m]。north0/east0 はシミュレーション開始時の位置",
+  "current": {
+    "speed": 0.15,
+    "to_deg": 240.0,
+    "v_north": -0.075,
+    "v_east": -0.1299
+  },
+  "incident": {
+    "datum_north": -110.0,
+    "datum_east": 40.0,
+    "elapsed_s": 600.0
+  },
+  "persons": [
+    {
+      "id": "P1",
+      "model": "Rescue Randy",
+      "note": "浮いている人",
+      "north0": -151.0,
+      "east0": -43.94
+    },
+    {
+      "id": "P2",
+      "model": "Casual female",
+      "note": "立ち泳ぎの人",
+      "north0": -165.0,
+      "east0": -29.94
+    },
+    {
+      "id": "P3",
+      "model": "Standing person",
+      "note": "立ち泳ぎの人",
+      "north0": -143.0,
+      "east0": -23.94
+    },
+    {
+      "id": "P4",
+      "model": "Walking person",
+      "note": "立ち泳ぎの人",
+      "north0": -200.0,
+      "east0": -67.94
+    },
+    {
+      "id": "P5",
+      "model": "Rescue Randy",
+      "note": "浮いている人",
+      "north0": -115.0,
+      "east0": -92.94
+    }
+  ]
+}
