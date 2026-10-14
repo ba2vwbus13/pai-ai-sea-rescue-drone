@@ -90,6 +90,8 @@ flowchart LR
 
 設計の根拠になった実験は [docs/experiments.md](docs/experiments.md) にあります。
 
+説明資料(docs/report.pdf)の各章を、図と表で詳しく解説した資料もあります:[docs/解説資料_レポート編.pdf](docs/解説資料_レポート編.pdf)(元の HTML は [docs/guide.html](docs/guide.html))。
+
 ## 動かし方
 
 ### 前提
